@@ -1,0 +1,60 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "prd-generator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a90df21d-fbde-4e3f-ad86-8a0335e2ba6d",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 240]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer <DEEPSEEK\_API\_KEY>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"deepseek-chat\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"Write a short, concise Product Requirement Document under 150 words. Only include 3 brief sections: Overview, Core Features, and Success Metrics. Product Name: {{ \$json.body.productName }}. Description: {{ \$json.body.productDescription }}\"\n    }\n  ]\n}"
+      },
+      "id": "e7b0c8bf-67fa-48e0-bf4d-8cfd2a3cd648",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [470, 240]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ \$json.choices[0].message.content }}",
+        "options": {}
+      },
+      "id": "bfd60cf4-9de6-4bc0-bd20-7f28dc04cf3d",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [690, 240]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "HTTP Request", "type": "main", "index": 0 }]]
+    },
+    "HTTP Request": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  }
+}
