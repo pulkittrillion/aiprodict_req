@@ -1,4 +1,5 @@
 # AI Product Requirement Generator (n8n + DeepSeek + Cloudflare Tunnel)
+![Project diagram](https://i.ibb.co/v4tVJN7V/image.png)
 
 This project is an **AI Product Requirement Document (PRD) generator** built with an **n8n workflow** hosted on a **VPS**, exposed to the internet via a **Cloudflare (trycloudflare) tunnel**, and triggered by a simple **HTML frontend** (web form).
 
